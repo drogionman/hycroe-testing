@@ -1,16 +1,10 @@
-FROM ubuntu:22.04
+FROM debian:bullseye
 
-# Set hostname and prompt
-RUN echo "hycroe" > /etc/hostname && \
-    echo 'export PS1="root@hycroe:\w\$ "' >> /root/.bashrc
+RUN apt update && apt install -y \
+  tmate openssh-client curl && \
+  apt clean
 
-# Install required packages
-RUN apt update -y && apt upgrade -y && \
-    apt install -y curl neofetch sudo openssh-server systemctl tmate
-
-# Copy and give execute permission to start.sh
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Start script
 CMD ["/start.sh"]
