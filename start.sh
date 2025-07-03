@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo "Starting tmate session..."
+# Start tmate in background and filter SSH connection
+(tmate -F 2>&1 | grep --line-buffered "ssh session:" | sed 's/^.*ssh/ssh/') &
 
-# Create new SSH key if missing
-[ ! -f ~/.ssh/id_rsa ] && ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
-
-# Start tmate session
-tmate -F -n hycroe-session -k ~/.ssh/id_rsa
+# Minimal HTTP server for Railway's port requirement
+while true; do
+  echo -e "HTTP/1.1 200 OK\n\n<tmate SSH session running>" | nc -lvp ${PORT:-3000}
+done
